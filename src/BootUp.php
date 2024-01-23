@@ -19,12 +19,21 @@ class BootUp
             return false;
         });
 
+        $controllerPath = APPLICATION_PATH . '/src/Controller/';
+        $controllerDir  = dir($controllerPath);
+
+        while (false !== ($entry = $controllerDir->read())) {
+            if (!in_array($entry, ['.', '..'])) {
+                require $controllerPath . $entry;
+            }
+        }
+
         return $this;
     }
 
-    public function initRouter (): BootUp
+    public function initRouter(): BootUp
     {
-        $router = new Router();
+        $router      = new Router();
         $this->route = $router->getRoute();
 
         return $this;
@@ -32,6 +41,9 @@ class BootUp
 
     public function run(): void
     {
-        //@todo call controller specified in config for current route
+        $controller = $this->route['controller'];
+        $method     = $this->route['method'];
+
+        (new $controller())->$method();
     }
 }

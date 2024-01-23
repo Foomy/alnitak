@@ -13,10 +13,8 @@ class Router
 
     public function getRoute(): array
     {
-        $currentRoute = current(array_filter($this->routes, function ($routeSet) {
+        return current(array_filter($this->routes, static function ($routeSet) {
             return ($_SERVER['REQUEST_URI'] === $routeSet['route']);
         }));
-
-        return [];
     }
 }
