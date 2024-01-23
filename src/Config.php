@@ -4,6 +4,8 @@ namespace Application;
 
 class Config
 {
+    private const KEY_SEPARATOR = '.';
+
     private array $cfg;
 
     public function __construct()
@@ -11,23 +13,27 @@ class Config
         $this->cfg = [];
     }
 
-    public function getEnv($key): string
+    public function getEnv($key):  string
     {
         $this->collectEnvVars();
-
-        return '';
+        return $this->cfg[$key];
     }
 
-    public function getConfig($key): mixed
+    public function getConfig(string $key): mixed
     {
         $this->gatherConfigFiles();
+
+        if (false !== (strpos($key, self::KEY_SEPARATOR))) {
+            $keys = explode(self::KEY_SEPARATOR, $key);
+            (new Logger())->debug($keys);
+        }
 
         return $this->cfg[$key];
     }
 
     public function collectEnvVars(): void
     {
-        $cfg      = [];
+        $cfg = [];
         $envFiles = ['.env', '.env.local'];
 
         foreach ($envFiles as $envFile) {
@@ -37,7 +43,9 @@ class Config
 
                 foreach ($lines as $keyValuePair) {
                     [$key, $value] = explode('=', $keyValuePair);
-                    $this->cfg['env'][$key] = $value;
+                    if (! str_starts_with($key, '#')) {
+                        $this->cfg[$key] = $value;
+                    }
                 }
             }
         }
@@ -48,14 +56,14 @@ class Config
         $configPath = APPLICATION_PATH . '/config/';
         $blacklist  = ['.', '..'];
         $cfgDir     = dir($configPath);
-        $config     = [];
+        $configs     = [];
 
         while (false !== ($filename = $cfgDir->read())) {
             if (!in_array($filename, $blacklist, true)) {
-                $config = include $configPath . $filename;
+                $configs[] = include $configPath . $filename;
             }
         }
 
-        $this->cfg = array_merge($this->cfg, $config);
+        $this->cfg = array_merge($this->cfg, ...$configs);
     }
 }
