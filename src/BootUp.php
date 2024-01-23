@@ -4,9 +4,11 @@ namespace Application;
 
 class BootUp
 {
+    private array $route;
+
     public function initAutoloader(): BootUp
     {
-        spl_autoload_register(function ($class) {
+        spl_autoload_register(static function ($class) {
             $autoloadCfg = require APPLICATION_PATH . '/config/autoloader.php';
 
             if (array_key_exists($class, $autoloadCfg) && file_exists($autoloadCfg[$class])) {
@@ -23,9 +25,8 @@ class BootUp
     public function initRouter (): BootUp
     {
         $router = new Router();
-        $route  = $router->getRoute();
+        $this->route = $router->getRoute();
 
-        //@todo get route form config
         return $this;
     }
 

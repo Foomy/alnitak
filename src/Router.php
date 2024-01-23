@@ -13,13 +13,9 @@ class Router
 
     public function getRoute(): array
     {
-        (new Logger())->debug($this->routes);
-        $currentUrl   = $_SERVER['REQUEST_URI'];
-        $currentroute = [];
-
-        foreach ($this->routes as $route) {
-            
-        }
+        $currentRoute = current(array_filter($this->routes, function ($routeSet) {
+            return ($_SERVER['REQUEST_URI'] === $routeSet['route']);
+        }));
 
         return [];
     }
