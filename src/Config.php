@@ -25,7 +25,6 @@ class Config
 
         if (false !== (strpos($key, self::KEY_SEPARATOR))) {
             $keys = explode(self::KEY_SEPARATOR, $key);
-            (new Logger())->debug($keys);
         }
 
         return $this->cfg[$key];
