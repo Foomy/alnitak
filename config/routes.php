@@ -4,7 +4,7 @@ return [
     'routes' => [
         [
             'route'      => '/',
-            'controller' => 'Application\Controller\index',
+            'controller' => 'Application\Controller\Home',
             'method'     => 'index',
         ],
         [

@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', dirname(__DIR__));
 
-include_once APPLICATION_PATH . '/src/BootUp.php';
+require_once APPLICATION_PATH . '/src/BootUp.php';
 
 (new Application\BootUp())
     ->initAutoloader()
